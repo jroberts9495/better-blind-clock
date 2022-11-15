@@ -1,25 +1,34 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, OnChanges, Input } from '@angular/core';
 
 @Component({
   selector: 'app-blind-clock',
   templateUrl: './blind-clock.component.html',
   styleUrls: ['./blind-clock.component.css'],
 })
-export class BlindClockComponent implements OnInit {
+export class BlindClockComponent implements OnInit, OnChanges {
   //TODO Implement pause
   @Input('paused') paused: boolean;
-  timeRemaining: string;
+  @Input('timer') timer: number;
 
-  readonly TIME_FORMAT = '{0}';
+  readonly UPDATE_INTERVAL: number = 100;
+
+  timeRemaining: string;
   timerStart: number = Date.now();
+
+  ngOnChanges() {
+    // Reset the timer if time is 0. Remove and revamp later
+    if (this.paused && this.timeRemaining === '00:00.0') {
+      this.timerStart = Date.now() - this.UPDATE_INTERVAL;
+    }
+  }
 
   ngOnInit() {
     setInterval(() => {
       if (this.paused) {
-        this.timerStart += 100;
+        this.timerStart += this.UPDATE_INTERVAL;
       }
       if (this.timerStart !== undefined) {
-        let elapsedNumeric = 120 - (Date.now() - this.timerStart) / 1000;
+        let elapsedNumeric = this.timer - (Date.now() - this.timerStart) / 1000;
         if (elapsedNumeric <= 0) {
           this.timeRemaining = '00:00.0';
         } else {
@@ -28,7 +37,7 @@ export class BlindClockComponent implements OnInit {
           )}:${this.pad(elapsedNumeric % 60, 1)}`;
         }
       }
-    }, 100);
+    }, this.UPDATE_INTERVAL);
   }
 
   constructor() {}
