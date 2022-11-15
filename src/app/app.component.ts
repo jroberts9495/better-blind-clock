@@ -8,12 +8,14 @@ import { BlindClockComponent } from './blind-clock/blind-clock.component';
 })
 export class AppComponent {
   @ViewChild('blindClock') blindClock: BlindClockComponent;
-  blindClockTime = 120;
+  blindClockTime = 10;
 
   togglePause() {
+    console.log(this.blindClock.timeRemaining);
     if (this.blindClock.timeElapsed()) {
       this.blindClockTime = 0;
-      this.blindClockTime = 120;
+      this.blindClockTime = 10;
+      console.log(this.blindClock.timeRemaining);
     }
     this.blindClock.pause();
   }

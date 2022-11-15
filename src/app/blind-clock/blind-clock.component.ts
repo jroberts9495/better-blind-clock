@@ -5,7 +5,7 @@ import {
   Input,
   SimpleChanges,
 } from '@angular/core';
-import { takeUntil, takeWhile, timer as Timer } from 'rxjs';
+import { takeWhile, timer as Timer } from 'rxjs';
 
 @Component({
   selector: 'app-blind-clock',
@@ -39,7 +39,9 @@ export class BlindClockComponent implements OnInit, OnChanges {
 
   pause() {
     if (this.timer) {
-      this.timeSub.unsubscribe();
+      if (!this.timeSub.closed) {
+        this.timeSub.unsubscribe();
+      }
       this.timer = null;
     } else {
       this.start();
