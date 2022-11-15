@@ -1,4 +1,11 @@
-import { Component, OnInit, OnChanges, Input } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  OnChanges,
+  Input,
+  SimpleChanges,
+} from '@angular/core';
+import { timer as Timer } from 'rxjs';
 
 @Component({
   selector: 'app-blind-clock',
@@ -8,37 +15,45 @@ import { Component, OnInit, OnChanges, Input } from '@angular/core';
 export class BlindClockComponent implements OnInit, OnChanges {
   //TODO Implement pause
   @Input('paused') paused: boolean;
-  @Input('timer') timer: number;
+  @Input('timer') timeRemaining: number;
 
   readonly UPDATE_INTERVAL: number = 100;
 
-  timeRemaining: string;
-  timerStart: number = Date.now();
+  timeSub = null;
+  timeRemainingStr: string = '00:00.0';
+  timer = null;
 
-  ngOnChanges() {
-    // Reset the timer if time is 0. Remove and revamp later
-    if (this.paused && this.timeRemaining === '00:00.0') {
-      this.timerStart = Date.now() - this.UPDATE_INTERVAL;
+  start() {
+    this.timer = Timer(this.UPDATE_INTERVAL, this.UPDATE_INTERVAL);
+    this.timeSub = this.timer.subscribe(() => {
+      this.timeRemaining = this.timeRemaining - this.UPDATE_INTERVAL;
+      if (this.timeRemaining <= 0) {
+        this.timeRemainingStr = '00:00.0';
+      } else {
+        this.timeRemainingStr = `${this.pad(
+          Math.floor(this.timeRemaining / 60)
+        )}:${this.pad(this.timeRemaining % 60, 1)}`;
+      }
+    });
+  }
+
+  pause() {
+    if (this.timer) {
+      this.timeSub.unsubscribe();
+      this.timer = null;
+    } else {
+      this.start();
     }
   }
 
-  ngOnInit() {
-    setInterval(() => {
-      if (this.paused) {
-        this.timerStart += this.UPDATE_INTERVAL;
-      }
-      if (this.timerStart !== undefined) {
-        let elapsedNumeric = this.timer - (Date.now() - this.timerStart) / 1000;
-        if (elapsedNumeric <= 0) {
-          this.timeRemaining = '00:00.0';
-        } else {
-          this.timeRemaining = `${this.pad(
-            Math.floor(elapsedNumeric / 60)
-          )}:${this.pad(elapsedNumeric % 60, 1)}`;
-        }
-      }
-    }, this.UPDATE_INTERVAL);
+  ngOnChanges(changes: SimpleChanges) {
+    // Reset the timer if time is 0. Remove and revamp later
+    /*if (this.paused && this.timeRemaining === '00:00.0') {
+      this.timerStart = Date.now() - this.UPDATE_INTERVAL;
+    }*/
   }
+
+  ngOnInit() {}
 
   constructor() {}
 
