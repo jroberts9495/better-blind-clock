@@ -11,11 +11,9 @@ export class AppComponent {
   blindClockTime = 10;
 
   togglePause() {
-    console.log(this.blindClock.timeRemaining);
     if (this.blindClock.timeElapsed()) {
-      this.blindClockTime = 0;
-      this.blindClockTime = 10;
-      console.log(this.blindClock.timeRemaining);
+      //TODO This is BAD, gotta figure out the proper way to trigger changes.
+      this.blindClockTime = this.blindClockTime + 0.00001;
     }
     this.blindClock.pause();
   }
