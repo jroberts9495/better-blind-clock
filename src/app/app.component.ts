@@ -1,11 +1,16 @@
-import { Component, VERSION } from '@angular/core';
+import { Component, VERSION, ViewChild } from '@angular/core';
+import { BlindClockComponent } from './blind-clock/blind-clock.component';
 
 @Component({
   selector: 'my-app',
   templateUrl: './app.component.html',
-  styleUrls: [ './app.component.css' ]
+  styleUrls: ['./app.component.css'],
 })
-export class AppComponent  {
+export class AppComponent {
+  @ViewChild('blindClock') blindClock: BlindClockComponent;
   name = 'Angular ' + VERSION.major;
-  paused = true;
+
+  togglePause() {
+    this.blindClock.pause();
+  }
 }

@@ -1,6 +1,6 @@
 <app-blind-clock
+  #blindClock
   class="fullPageBG"
-  [paused]="paused"
   [timer]="120"
-  (click)="paused = !paused"
+  (click)="togglePause()"
 ></app-blind-clock>
