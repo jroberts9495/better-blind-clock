@@ -8,9 +8,13 @@ import { BlindClockComponent } from './blind-clock/blind-clock.component';
 })
 export class AppComponent {
   @ViewChild('blindClock') blindClock: BlindClockComponent;
-  name = 'Angular ' + VERSION.major;
+  blindClockTime = 120;
 
   togglePause() {
+    if (this.blindClock.timeElapsed()) {
+      this.blindClockTime = 0;
+      this.blindClockTime = 120;
+    }
     this.blindClock.pause();
   }
 }

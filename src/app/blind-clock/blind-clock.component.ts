@@ -5,7 +5,7 @@ import {
   Input,
   SimpleChanges,
 } from '@angular/core';
-import { timer as Timer } from 'rxjs';
+import { takeUntil, takeWhile, timer as Timer } from 'rxjs';
 
 @Component({
   selector: 'app-blind-clock',
@@ -23,16 +23,18 @@ export class BlindClockComponent implements OnInit, OnChanges {
 
   start() {
     this.timer = Timer(this.UPDATE_INTERVAL, this.UPDATE_INTERVAL);
-    this.timeSub = this.timer.subscribe(() => {
-      if (this.timeRemaining <= 0) {
-        this.timeRemainingStr = '00:00.0';
-      } else {
+    this.timeSub = this.timer
+      .pipe(takeWhile(() => !this.timeElapsed()))
+      .subscribe(() => {
         this.timeRemaining = this.timeRemaining - this.UPDATE_INTERVAL / 1000;
-        this.timeRemainingStr = `${this.pad(
-          Math.floor(this.timeRemaining / 60)
-        )}:${this.pad(this.timeRemaining % 60, 1)}`;
-      }
-    });
+        if (this.timeRemaining <= 0) {
+          this.timeRemainingStr = '00:00.0';
+        } else {
+          this.timeRemainingStr = `${this.pad(
+            Math.floor(this.timeRemaining / 60)
+          )}:${this.pad(this.timeRemaining % 60, 1)}`;
+        }
+      });
   }
 
   pause() {
@@ -53,13 +55,13 @@ export class BlindClockComponent implements OnInit, OnChanges {
     return this.timeRemaining <= 0;
   }
 
-  ngOnChanges(changes: SimpleChanges) {}
-
-  ngOnInit() {
+  ngOnChanges(changes: SimpleChanges) {
     this.timeRemainingStr = `${this.pad(
       Math.floor(this.timeRemaining / 60)
     )}:${this.pad(this.timeRemaining % 60, 1)}`;
   }
+
+  ngOnInit() {}
 
   constructor() {}
 
