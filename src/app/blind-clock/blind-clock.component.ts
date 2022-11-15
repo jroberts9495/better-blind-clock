@@ -15,19 +15,19 @@ import { timer as Timer } from 'rxjs';
 export class BlindClockComponent implements OnInit, OnChanges {
   @Input('timer') timeRemaining: number;
 
-  readonly UPDATE_INTERVAL: number = 100;
+  private readonly UPDATE_INTERVAL: number = 100;
 
-  timeSub = null;
+  private timeSub = null;
+  private timer = null;
   timeRemainingStr: string;
-  timer = null;
 
   start() {
     this.timer = Timer(this.UPDATE_INTERVAL, this.UPDATE_INTERVAL);
     this.timeSub = this.timer.subscribe(() => {
-      this.timeRemaining = this.timeRemaining - this.UPDATE_INTERVAL / 1000;
       if (this.timeRemaining <= 0) {
         this.timeRemainingStr = '00:00.0';
       } else {
+        this.timeRemaining = this.timeRemaining - this.UPDATE_INTERVAL / 1000;
         this.timeRemainingStr = `${this.pad(
           Math.floor(this.timeRemaining / 60)
         )}:${this.pad(this.timeRemaining % 60, 1)}`;
@@ -42,6 +42,14 @@ export class BlindClockComponent implements OnInit, OnChanges {
     } else {
       this.start();
     }
+  }
+
+  timeLeft(): number {
+    return this.timeRemaining;
+  }
+
+  timeElapsed(): boolean {
+    return this.timeRemaining <= 0;
   }
 
   ngOnChanges(changes: SimpleChanges) {}
