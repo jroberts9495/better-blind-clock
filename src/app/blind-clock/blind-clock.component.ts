@@ -48,6 +48,7 @@ export class BlindClockComponent implements OnInit, OnChanges {
     return this.timeRemaining;
   }
 
+  // TODO Make a subscription?
   timeElapsed(): boolean {
     return this.timeRemaining <= 0;
   }
