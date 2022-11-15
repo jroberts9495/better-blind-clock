@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
   selector: 'app-blind-clock',
@@ -7,14 +7,17 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 })
 export class BlindClockComponent implements OnInit {
   //TODO Implement pause
-  @ViewChild('paused') paused: boolean;
-  @ViewChild('timeRemaining') timeRemaining: string;
+  @Input('paused') paused: boolean;
+  timeRemaining: string;
 
   readonly TIME_FORMAT = '{0}';
   timerStart: number = Date.now();
 
   ngOnInit() {
     setInterval(() => {
+      if (this.paused) {
+        this.timerStart += 100;
+      }
       if (this.timerStart !== undefined) {
         let elapsedNumeric = 120 - (Date.now() - this.timerStart) / 1000;
         if (elapsedNumeric <= 0) {
