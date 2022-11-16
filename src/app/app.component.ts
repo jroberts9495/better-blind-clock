@@ -9,6 +9,7 @@ import { BlindClockComponent } from './blind-clock/blind-clock.component';
 export class AppComponent {
   @ViewChild('blindClock') blindClock: BlindClockComponent;
   blindClockTime = 10;
+  shift = 10;
 
   togglePause() {
     if (this.blindClock.timeElapsed()) {

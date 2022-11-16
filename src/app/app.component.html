@@ -2,5 +2,6 @@
   #blindClock
   class="fullPageBG"
   [timer]="blindClockTime"
+  [style]="{'filter': 'hue-rotate('+ shift + 'deg)'}"
   (click)="togglePause()"
 ></app-blind-clock>
