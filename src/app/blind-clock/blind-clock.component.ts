@@ -5,7 +5,7 @@ import {
   Input,
   SimpleChanges,
 } from '@angular/core';
-import { takeWhile, timer as Timer } from 'rxjs';
+import { Observable, Subject, takeWhile, timer as Timer } from 'rxjs';
 
 @Component({
   selector: 'app-blind-clock',
@@ -15,10 +15,11 @@ import { takeWhile, timer as Timer } from 'rxjs';
 export class BlindClockComponent implements OnInit, OnChanges {
   @Input('timer') timeRemaining: number;
 
-  private readonly UPDATE_INTERVAL: number = 100;
+  private readonly UPDATE_INTERVAL: number = 10;
 
   private timeSub = null;
   private timer = null;
+  private timerObservable = new Subject<number>();
   timeRemainingStr: string;
 
   start() {
@@ -29,10 +30,12 @@ export class BlindClockComponent implements OnInit, OnChanges {
         this.timeRemaining = this.timeRemaining - this.UPDATE_INTERVAL / 1000;
         if (this.timeRemaining <= 0) {
           this.timeRemainingStr = '00:00.0';
+          this.timerObservable.next(0);
         } else {
           this.timeRemainingStr = `${this.pad(
             Math.floor(this.timeRemaining / 60)
           )}:${this.pad(this.timeRemaining % 60, 1)}`;
+          this.timerObservable.next(this.timeRemaining)
         }
       });
   }
@@ -50,6 +53,10 @@ export class BlindClockComponent implements OnInit, OnChanges {
 
   timeLeft(): number {
     return this.timeRemaining;
+  }
+
+  getTimeLeftSub() {
+    return this.timerObservable;
   }
 
   // TODO Make a subscription?
