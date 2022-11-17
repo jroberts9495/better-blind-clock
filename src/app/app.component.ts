@@ -8,7 +8,7 @@ import { BlindClockComponent } from './blind-clock/blind-clock.component';
 })
 export class AppComponent implements AfterViewInit {
   @ViewChild('blindClock') blindClock: BlindClockComponent;
-  blindClockTime = 10;
+  blindClockTime = 120;
   shift = 0;
 
   ngAfterViewInit() {
@@ -24,5 +24,6 @@ export class AppComponent implements AfterViewInit {
       this.blindClockTime = this.blindClockTime + 0.00001;
     }
     this.blindClock.pause();
+    this.shift = 0;
   }
 }

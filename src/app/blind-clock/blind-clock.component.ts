@@ -68,8 +68,6 @@ export class BlindClockComponent implements OnInit, OnChanges {
     this.timeRemainingStr = `${this.pad(
       Math.floor(this.timeRemaining / 60)
     )}:${this.pad(this.timeRemaining % 60, 1)}`;
-    // TODO Errors for change after check
-    this.timerObservable.next(this.timeRemaining);
   }
 
   ngOnInit() {}
