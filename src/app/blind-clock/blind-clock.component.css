@@ -1,0 +1,11 @@
+.upsideDown {
+  text-align: center;
+  font-size: 25vw;
+  margin-top: 50%;
+  transform: rotate(180deg);
+}
+
+.rightsideUp {
+  text-align: center;
+  font-size: 25vw;
+}
