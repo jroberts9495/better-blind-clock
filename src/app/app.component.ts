@@ -1,4 +1,4 @@
-import { AfterContentInit, AfterViewInit, Component, OnInit, VERSION, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { BlindClockComponent } from './blind-clock/blind-clock.component';
 
 @Component({
@@ -13,8 +13,9 @@ export class AppComponent implements AfterViewInit {
 
   ngAfterViewInit() {
     this.blindClock.getTimeLeftSub().subscribe((timeLeft) => {
-      this.shift = 90 / (1 + Math.exp(5 * (timeLeft - .05 * this.blindClockTime)))
-    })
+      this.shift =
+        90 / (1 + Math.exp(5 * (timeLeft - 0.05 * this.blindClockTime)));
+    });
   }
 
   togglePause() {
